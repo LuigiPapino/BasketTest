@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+
+    >
+
+
+    <TextView
+        android:id="@+id/priceTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:textStyle="bold"
+        tools:text="@string/price_example" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@id/priceTotal"
+        tools:text="@string/price_example" />
+
+
+    <TextView
+        android:id="@+id/count"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:gravity="right"
+
+        android:textStyle="bold"
+        tools:text="99" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@id/price"
+        android:layout_toRightOf="@id/count"
+        android:maxLines="1"
+        tools:text="@string/name" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/separator" />
+</RelativeLayout>

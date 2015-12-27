@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="items_name">
+        <item>Peas</item>
+        <item>Eggs</item>
+        <item>Milk</item>
+        <item>Beans</item>
+    </string-array>
+
+    <string-array name="items_unit">
+        <item>bag</item>
+        <item>dozen</item>
+        <item>bottle</item>
+        <item>can</item>
+    </string-array>
+
+    <integer-array name="items_price">
+        <item>95</item>
+        <item>210</item>
+        <item>130</item>
+        <item>73</item>
+    </integer-array>
+
+
+</resources>
