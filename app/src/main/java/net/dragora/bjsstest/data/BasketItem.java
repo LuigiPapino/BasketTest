@@ -31,7 +31,7 @@ public class BasketItem implements Parcelable {
     }
 
     public String getTotalPriceFormatted(){
-        return Tools.formatPrice(getTotalPrice());
+        return Tools.formatPrice(getTotalPrice() / 100.0);
     }
     protected BasketItem(Parcel in) {
         item = in.readParcelable(Item.class.getClassLoader());

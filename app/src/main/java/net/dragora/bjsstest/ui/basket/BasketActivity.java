@@ -4,9 +4,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
+import com.marshalchen.ultimaterecyclerview.itemTouchHelper.SimpleItemTouchHelperCallback;
 
 import net.dragora.bjsstest.MyApplication;
 import net.dragora.bjsstest.R;
@@ -44,6 +48,7 @@ public class BasketActivity extends AppCompatActivity {
 
     @Pref
     MainPrefs_ mainPrefs;
+    private ItemTouchHelper mItemTouchHelper;
 
     @AfterViews
     protected void setup() {
@@ -53,6 +58,23 @@ public class BasketActivity extends AppCompatActivity {
         recyclerView.setAdapter(itemsAdapter);
         recyclerView.setEmptyView(R.layout.basket_empty_view);
 
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                basketStore.getBasket().removeItem(viewHolder.getAdapterPosition());
+                basketStore.save();
+                itemsAdapter.setItems(basketStore.getBasket().getItems());
+
+
+            }
+        };
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView.mRecyclerView);
 
     }
 

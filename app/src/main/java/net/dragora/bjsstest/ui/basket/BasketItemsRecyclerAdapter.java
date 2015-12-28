@@ -56,4 +56,11 @@ public class BasketItemsRecyclerAdapter extends UltimateRecyclerViewAdapterBase<
     protected BasketItemView onCreateItemView(ViewGroup parent, int viewType) {
         return BasketItemView_.build(context);
     }
+
+    public void remove(int index) {
+        if (index > 0 && index < items.size()){
+            items.remove(index);
+            notifyItemRemoved(index);
+        }
+    }
 }

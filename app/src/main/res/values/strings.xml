@@ -5,7 +5,7 @@
     <string name="action_search">Search</string>
     <string name="items">Items</string>
     <string name="name">Name</string>
-    <string name="price_example">1.21£</string>
+    <string name="price_example">999.99£</string>
     <string name="item_description_with_unit">%1$s %2$s£ per %3$s</string>
     <string name="item_description">%1$s %2$s£ per unit</string>
     <string name="item_add_total"><![CDATA[Total <b>%1$s£</b>]]></string>
@@ -13,4 +13,9 @@
     <string name="cancel">Cancel</string>
     <string name="money">%1$s£</string>
     <string name="empty_basket">Click on \"+\" button to add items</string>
+    <string name="per_symbol">×</string>
+    <string name="equal_symbol">=</string>
+    <string name="total">Total</string>
+    <string name="unit">Unit</string>
+    <string name="item_added">%1$d %2$s added</string>
 </resources>

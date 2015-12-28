@@ -86,5 +86,6 @@ public class ItemsActivity extends AppCompatActivity implements ItemView.OnItemA
         Basket basket = basketStore.getBasket();
         basket.addItem(item, count);
         basketStore.save();
+        Snackbar.make(recyclerView, getString(R.string.item_added, count, item.getName()), Snackbar.LENGTH_SHORT).show();
     }
 }

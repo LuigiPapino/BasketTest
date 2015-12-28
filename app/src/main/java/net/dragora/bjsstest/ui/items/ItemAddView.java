@@ -48,7 +48,7 @@ public class ItemAddView extends LinearLayout {
 
     @AfterViews
     protected void setup() {
-        numberPicker.setMaxValue(99);
+        numberPicker.setMaxValue(9);
         numberPicker.setMinValue(1);
     }
 

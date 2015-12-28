@@ -63,15 +63,30 @@ public class Basket implements Parcelable {
         if (item == null || count <= 0)
             return;
 
-        BasketItem basketItem = Stream.of(items)
+
+
+
+        Stream.of(items)
                 .filter(value -> value.getItem().getId() == item.getId())
                 .findFirst()
-                .orElse(new BasketItem(item, 0));
+                .orElseGet(() -> createAndAddBasketItem(item))
+                .addCount(count);
 
-        basketItem.addCount(count);
+
     }
 
     public ArrayList<BasketItem> getItems() {
         return items;
+    }
+
+    private BasketItem createAndAddBasketItem(Item item) {
+        BasketItem basketItem = new BasketItem(item, 0);
+        items.add(basketItem);
+        return basketItem;
+    }
+
+    public void removeItem(int index) {
+        if (index > 0 && index < items.size())
+        items.remove(index);
     }
 }
