@@ -85,8 +85,9 @@ public class Basket implements Parcelable {
         return basketItem;
     }
 
-    public void removeItem(int index) {
-        if (index > 0 && index < items.size())
-        items.remove(index);
+    public BasketItem removeItem(int index) {
+        if (index >= 0 && index < items.size())
+            return items.remove(index);
+        return null;
     }
 }

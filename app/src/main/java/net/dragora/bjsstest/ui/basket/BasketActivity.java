@@ -10,12 +10,13 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
-import com.marshalchen.ultimaterecyclerview.itemTouchHelper.SimpleItemTouchHelperCallback;
 
 import net.dragora.bjsstest.MyApplication;
 import net.dragora.bjsstest.R;
+import net.dragora.bjsstest.data.BasketItem;
 import net.dragora.bjsstest.data.BasketStore;
 import net.dragora.bjsstest.data.MainPrefs_;
+import net.dragora.bjsstest.network.NetworkApi;
 import net.dragora.bjsstest.ui.items.ItemsActivity_;
 
 import org.androidannotations.annotations.AfterViews;
@@ -31,7 +32,7 @@ import javax.inject.Inject;
 
 @EActivity(R.layout.basket_activity)
 @OptionsMenu(R.menu.menu_basket)
-public class BasketActivity extends AppCompatActivity {
+public class BasketActivity extends AppCompatActivity implements BasketItemView.OnItemEditedCallback {
 
 
     @ViewById
@@ -42,13 +43,42 @@ public class BasketActivity extends AppCompatActivity {
     UltimateRecyclerView recyclerView;
     @Inject
     BasketStore basketStore;
+    @Inject
+    NetworkApi networkApi;
 
     @Bean
     BasketItemsRecyclerAdapter itemsAdapter;
 
     @Pref
     MainPrefs_ mainPrefs;
-    private ItemTouchHelper mItemTouchHelper;
+    private ItemTouchHelper itemTouchHelper;
+
+    ItemTouchHelper.Callback swipeDismissCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            final int index = viewHolder.getAdapterPosition();
+            final BasketItem basketItem = basketStore.getBasket().removeItem(index);
+            basketStore.save();
+            itemsAdapter.setItems(basketStore.getBasket().getItems());
+            Snackbar.make(recyclerView, getString(R.string.basket_item_deleted, basketItem.getItem().getName()), Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            basketStore.getBasket().getItems().add(index, basketItem);
+                            basketStore.save();
+                            itemsAdapter.setItems(basketStore.getBasket().getItems());
+                        }
+                    })
+                    .show();
+
+        }
+    };
 
     @AfterViews
     protected void setup() {
@@ -58,24 +88,11 @@ public class BasketActivity extends AppCompatActivity {
         recyclerView.setAdapter(itemsAdapter);
         recyclerView.setEmptyView(R.layout.basket_empty_view);
 
-        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                basketStore.getBasket().removeItem(viewHolder.getAdapterPosition());
-                basketStore.save();
-                itemsAdapter.setItems(basketStore.getBasket().getItems());
+        itemTouchHelper = new ItemTouchHelper(swipeDismissCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView.mRecyclerView);
 
-
-            }
-        };
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView.mRecyclerView);
-
+        networkApi.jsonRatesAPI.getCurrencies().subscribe();
     }
 
     @Override
@@ -94,4 +111,26 @@ public class BasketActivity extends AppCompatActivity {
         ItemsActivity_.intent(this).start();
     }
 
+    @Override
+    public void onItemEdited(BasketItem basketItem) {
+        basketStore.save();
+        itemsAdapter.setItems(basketStore.getBasket().getItems());
+
+    }
+
+    @Override
+    public void onItemDeleted(BasketItem basketItem) {
+        final int index = basketStore.getBasket().getItems().indexOf(basketItem);
+        basketStore.getBasket().getItems().remove(basketItem);
+        basketStore.save();
+        itemsAdapter.setItems(basketStore.getBasket().getItems());
+
+        Snackbar.make(recyclerView, getString(R.string.basket_item_deleted, basketItem.getItem().getName()), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, v -> {
+                    basketStore.getBasket().getItems().add(index, basketItem);
+                    basketStore.save();
+                    itemsAdapter.setItems(basketStore.getBasket().getItems());
+                })
+                .show();
+    }
 }

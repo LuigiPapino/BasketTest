@@ -26,12 +26,6 @@ public class BasketItemsRecyclerAdapter extends UltimateRecyclerViewAdapterBase<
     Context context;
 
 
-    public void update() {
-
-    }
-
-
-
     public void setItems(List<BasketItem> items) {
         this.items = items;
         notifyDataSetChanged();
@@ -57,10 +51,4 @@ public class BasketItemsRecyclerAdapter extends UltimateRecyclerViewAdapterBase<
         return BasketItemView_.build(context);
     }
 
-    public void remove(int index) {
-        if (index > 0 && index < items.size()){
-            items.remove(index);
-            notifyItemRemoved(index);
-        }
-    }
 }

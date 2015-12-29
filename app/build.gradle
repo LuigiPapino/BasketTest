@@ -48,7 +48,9 @@ dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
     //RETROFIT
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+
     //GSON
     compile 'com.google.code.gson:gson:2.5'
     //LEAKCANARY
@@ -63,6 +65,10 @@ dependencies {
 
     // JAVA 8 Stream
     compile 'com.annimon:stream:1.0.5'
+
+    // RxJava
+    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxandroid:1.0.1'
 
 
 }

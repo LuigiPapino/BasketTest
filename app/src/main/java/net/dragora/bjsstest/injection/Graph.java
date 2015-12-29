@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {ApplicationModule.class, DataStoreModule.class, })
+@Component(modules = {ApplicationModule.class, DataStoreModule.class, NetworkModule.class})
 public interface Graph {
 
 

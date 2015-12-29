@@ -55,7 +55,6 @@ public class ItemsActivity extends AppCompatActivity implements ItemView.OnItemA
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(itemsAdapter);
         itemsAdapter.setItems(itemsStore.getAll());
