@@ -7,7 +7,6 @@ def AAVersion = '3.3.2'
 
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-
 apply plugin: 'android-apt'
 
 

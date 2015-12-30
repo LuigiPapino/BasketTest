@@ -2,9 +2,7 @@ package net.dragora.bjsstest.ui.items;
 
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -47,6 +45,7 @@ public class ItemsActivity extends AppCompatActivity implements ItemView.OnItemA
     ItemsStore itemsStore;
     @Inject
     BasketStore basketStore;
+    SearchView searchView;
 
     @AfterViews
     protected void setup() {
@@ -61,10 +60,9 @@ public class ItemsActivity extends AppCompatActivity implements ItemView.OnItemA
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        SearchView searchView = (SearchView) actionSearch.getActionView();
+        searchView = (SearchView) actionSearch.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -86,5 +84,12 @@ public class ItemsActivity extends AppCompatActivity implements ItemView.OnItemA
         basket.addItem(item, count);
         basketStore.save();
         Snackbar.make(recyclerView, getString(R.string.item_added, count, item.getName()), Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        searchView.setOnQueryTextListener(null);
+        super.onDestroy();
+
     }
 }
