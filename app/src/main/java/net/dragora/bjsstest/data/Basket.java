@@ -2,7 +2,6 @@ package net.dragora.bjsstest.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.annimon.stream.Stream;
@@ -10,7 +9,6 @@ import com.annimon.stream.Stream;
 import net.dragora.bjsstest.commons.Tools;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by nietzsche on 26/12/15.
@@ -90,4 +88,12 @@ public class Basket implements Parcelable {
             return items.remove(index);
         return null;
     }
+
+    public int getTotal() {
+
+        return Stream.of(items)
+                .map(BasketItem::getTotalPrice)
+                .reduce(0, (x, y) -> x + y);
+    }
+
 }

@@ -1,34 +1,34 @@
 package net.dragora.bjsstest.network;
 
-import android.support.annotation.NonNull;
-
 import net.dragora.bjsstest.BuildConfig;
 
 import retrofit.RestAdapter;
-import retrofit.client.Client;
 
 
 public class NetworkApi {
 
     public static final String BASE_HOST_JSONRATES = "http://jsonrates.com/";
-
-
-    private RestAdapter restAdapter;
-
+    public static final String BASE_HOST_CURRENCYLAYER = "http://apilayer.net/api/";
+    public static final String ACCESS_KEY = "471fdf34334c9ad8b8e1c91b3b60a5cc";
     public JsonRatesAPIService jsonRatesAPI;
-
+    public CurrencyLayerAPIService currencyLayerAPIService;
+    private RestAdapter restAdapterJsonRates, restAdapterCurrencyLayer;
 
     public NetworkApi() {
 
-
-
-        restAdapter = new RestAdapter.Builder()
+        restAdapterJsonRates = new RestAdapter.Builder()
                 .setEndpoint(BASE_HOST_JSONRATES)
                 .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
                 .build();
 
+        restAdapterCurrencyLayer = new RestAdapter.Builder()
+                .setEndpoint(BASE_HOST_CURRENCYLAYER)
+                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
+                .setRequestInterceptor(request -> request.addEncodedQueryParam("access_key", ACCESS_KEY))
+                .build();
 
-        jsonRatesAPI = restAdapter.create(JsonRatesAPIService.class);
+        jsonRatesAPI = restAdapterJsonRates.create(JsonRatesAPIService.class);
+        currencyLayerAPIService = restAdapterCurrencyLayer.create(CurrencyLayerAPIService.class);
     }
 
 }

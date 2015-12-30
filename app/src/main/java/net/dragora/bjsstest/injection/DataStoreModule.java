@@ -3,7 +3,6 @@ package net.dragora.bjsstest.injection;
 import android.content.Context;
 
 import net.dragora.bjsstest.data.BasketStore;
-import net.dragora.bjsstest.data.BasketStorePref;
 import net.dragora.bjsstest.data.BasketStorePref_;
 import net.dragora.bjsstest.data.ItemsStore;
 import net.dragora.bjsstest.data.ItemsStoreFromRes;

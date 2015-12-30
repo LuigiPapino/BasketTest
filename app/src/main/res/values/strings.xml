@@ -20,6 +20,14 @@
     <string name="item_added">%1$d %2$s added</string>
     <string name="basket_item_deleted">%1$s deleted</string>
     <string name="undo">UNDO</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="delete">Delete</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="change_currency">Change currency</string>
+    <string name="checkout_total"><![CDATA[Total <b>%1$s %2$s</b>]]></string>
+    <string name="updating_currency">Updating exchanges quotes</string>
+    <string name="currency_update_to">Exchanges quotes updated %1$s</string>
+    <string name="network_error_exchanges">Network error. Exchanges quotes not available.</string>
 </resources>

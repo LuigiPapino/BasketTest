@@ -16,7 +16,7 @@ import net.dragora.bjsstest.R;
 import net.dragora.bjsstest.data.BasketItem;
 import net.dragora.bjsstest.data.BasketStore;
 import net.dragora.bjsstest.data.MainPrefs_;
-import net.dragora.bjsstest.network.NetworkApi;
+import net.dragora.bjsstest.ui.checkout.CheckoutDialogFragment_;
 import net.dragora.bjsstest.ui.items.ItemsActivity_;
 
 import org.androidannotations.annotations.AfterViews;
@@ -43,16 +43,13 @@ public class BasketActivity extends AppCompatActivity implements BasketItemView.
     UltimateRecyclerView recyclerView;
     @Inject
     BasketStore basketStore;
-    @Inject
-    NetworkApi networkApi;
+
 
     @Bean
     BasketItemsRecyclerAdapter itemsAdapter;
 
     @Pref
     MainPrefs_ mainPrefs;
-    private ItemTouchHelper itemTouchHelper;
-
     ItemTouchHelper.Callback swipeDismissCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -79,6 +76,7 @@ public class BasketActivity extends AppCompatActivity implements BasketItemView.
 
         }
     };
+    private ItemTouchHelper itemTouchHelper;
 
     @AfterViews
     protected void setup() {
@@ -92,7 +90,6 @@ public class BasketActivity extends AppCompatActivity implements BasketItemView.
         itemTouchHelper = new ItemTouchHelper(swipeDismissCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView.mRecyclerView);
 
-        networkApi.jsonRatesAPI.getCurrencies().subscribe();
     }
 
     @Override
@@ -103,7 +100,10 @@ public class BasketActivity extends AppCompatActivity implements BasketItemView.
 
     @OptionsItem(R.id.action_checkout)
     protected void checkout() {
-
+        CheckoutDialogFragment_.builder()
+                .total(basketStore.getBasket().getTotal())
+                .build()
+                .show(getSupportFragmentManager(), "dialog");
     }
 
     @Click
