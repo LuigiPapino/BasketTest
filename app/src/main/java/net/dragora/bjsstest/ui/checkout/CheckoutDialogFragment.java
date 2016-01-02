@@ -151,9 +151,10 @@ public class CheckoutDialogFragment extends DialogFragment {
 
     private boolean checkConnection() {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (!networkInfo.isAvailable()) {
+        if (networkInfo == null || !networkInfo.isAvailable()) {
             statusLabel.setText(R.string.no_connection);
             progressBar.setVisibility(View.GONE);
+            changeCurrency.setVisibility(View.INVISIBLE);
             return false;
         }
         return true;
