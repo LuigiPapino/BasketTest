@@ -2,6 +2,9 @@ package net.dragora.bjsstest.ui.checkout;
 
 
 import android.graphics.PorterDuff;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
@@ -22,6 +25,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
@@ -35,13 +39,15 @@ import rx.internal.util.SubscriptionList;
 @EFragment(R.layout.checkout_dialog_fragment)
 public class CheckoutDialogFragment extends DialogFragment {
 
-    private static final String DEFAULT_CURRENCY = "GBP";
+    public static final String DEFAULT_CURRENCY = "GBP";
+    private static final String TAG = CheckoutDialogFragment.class.getSimpleName();
+    @Inject
+    @VisibleForTesting
+    public NetworkApi networkApi;
+    @VisibleForTesting
+    public CurrenciesList currenciesList;
     @FragmentArg
     int total;
-
-
-    @Inject
-    NetworkApi networkApi;
     @ViewById
     TextView priceTotal;
     @ViewById
@@ -52,8 +58,8 @@ public class CheckoutDialogFragment extends DialogFragment {
     ProgressBar progressBar;
     @ViewById
     TextView statusLabel;
-
-    private CurrenciesList currenciesList;
+    @SystemService
+    ConnectivityManager connectivityManager;
     private ExchangesList exchangesList;
     private SubscriptionList subscriptionList = new SubscriptionList();
     //track if both api call was terminated
@@ -103,6 +109,9 @@ public class CheckoutDialogFragment extends DialogFragment {
 
     @Click
     protected void updateExchanges() {
+        if (!checkConnection())
+            return;
+
         subscriptionList.unsubscribe();
         subscriptionList.clear();
         subscriptionList = new SubscriptionList();
@@ -114,29 +123,48 @@ public class CheckoutDialogFragment extends DialogFragment {
         statusLabel.setText(R.string.updating_currency);
 
         subscriptionList.add(
-                networkApi.jsonRatesAPI.getCurrencies().onErrorReturn(null).subscribe(json -> {
-                    if (json != null) {
-                        currenciesList = new CurrenciesList(json);
-                        if (networkCallCompleted.incrementAndGet() == 2)
-                            exchangesUpdated();
-                    } else
-                        setNetworkError();
-                })
+                networkApi.jsonRatesAPI.getCurrencies()
+                        .subscribe(json -> {
+                                    currenciesList = new CurrenciesList(json);
+                                    if (currenciesList.isEmpty())
+                                        setNetworkError(null);
+                                    else if (networkCallCompleted.incrementAndGet() == 2)
+                                        exchangesUpdated();
+                                },
+                                this::setNetworkError
+
+                        )
         );
         subscriptionList.add(
-                networkApi.currencyLayerAPIService.getExchangesList().onErrorReturn(null).subscribe(value -> {
-                    if (value != null) {
-                        exchangesList = value;
-                        if (networkCallCompleted.incrementAndGet() == 2)
-                            exchangesUpdated();
-                    } else
-                        setNetworkError();
-
-                })
+                networkApi.currencyLayerAPIService.getExchangesList()
+                        .subscribe(value -> {
+                                    if (value != null) {
+                                        exchangesList = value;
+                                        if (networkCallCompleted.incrementAndGet() == 2)
+                                            exchangesUpdated();
+                                    } else
+                                        setNetworkError(null);
+                                },
+                                this::setNetworkError)
         );
     }
 
-    private void setNetworkError() {
+    private boolean checkConnection() {
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (!networkInfo.isAvailable()) {
+            statusLabel.setText(R.string.no_connection);
+            progressBar.setVisibility(View.GONE);
+            return false;
+        }
+        return true;
+    }
+
+    @UiThread
+    @android.support.annotation.UiThread
+    protected void setNetworkError(Throwable throwable) {
+        if (throwable != null)
+            throwable.printStackTrace();
+
         networkCallCompleted.set(0);
         subscriptionList.unsubscribe();
         changeCurrency.animate().alpha(0).start();
@@ -144,7 +172,6 @@ public class CheckoutDialogFragment extends DialogFragment {
         progressBar.setVisibility(View.GONE);
 
         statusLabel.setText(R.string.network_error_exchanges);
-
     }
 
     @UiThread

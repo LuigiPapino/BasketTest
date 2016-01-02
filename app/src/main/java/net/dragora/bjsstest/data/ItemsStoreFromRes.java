@@ -1,6 +1,7 @@
 package net.dragora.bjsstest.data;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import net.dragora.bjsstest.R;
@@ -17,14 +18,14 @@ public class ItemsStoreFromRes implements ItemsStore {
 
     private ArrayList<Item> items = new ArrayList<>();
 
-    public ItemsStoreFromRes(Context context) {
+    public ItemsStoreFromRes(@NonNull Context context) {
         this.context = context;
         String[] names = context.getResources().getStringArray(R.array.items_name);
         String[] units = context.getResources().getStringArray(R.array.items_unit);
         int[] prices = context.getResources().getIntArray(R.array.items_price);
 
         if (names.length != prices.length || names.length != units.length ||  names.length == 0)
-            throw new IllegalArgumentException("Items array lenght for names, prices not units not equal or zero");
+            throw new IllegalArgumentException("Items array lenght for names, prices or units not equal or zero");
 
         for (int i = 0; i < prices.length; i++) {
             Item item = new Item(i, prices[i], names[i], units[i]);
@@ -47,7 +48,6 @@ public class ItemsStoreFromRes implements ItemsStore {
             Item item = items.get(i);
             if (item.getName().toLowerCase().contains(filterLower))
                 itemsFiltered.add(item);
-
         }
         return itemsFiltered;
     }

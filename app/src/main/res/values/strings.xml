@@ -30,4 +30,5 @@
     <string name="updating_currency">Updating exchanges quotes</string>
     <string name="currency_update_to">Exchanges quotes updated %1$s</string>
     <string name="network_error_exchanges">Network error. Exchanges quotes not available.</string>
+    <string name="no_connection">No Data Coonection available</string>
 </resources>

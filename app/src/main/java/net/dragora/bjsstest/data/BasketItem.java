@@ -8,7 +8,7 @@ import net.dragora.bjsstest.commons.Tools;
 /**
  * Created by nietzsche on 26/12/15.
  *
- * Represent and item add to the basket. Incapsulate an Item object and add the parameter count
+ * Represent and item added to the basket. Incapsulate an Item object and add the parameter count
  */
 public class BasketItem implements Parcelable {
 
@@ -26,13 +26,6 @@ public class BasketItem implements Parcelable {
     private Item item;
     private int count;
 
-    public int getTotalPrice(){
-        return item.getPrice() * count;
-    }
-
-    public String getTotalPriceFormatted(){
-        return Tools.formatPrice(getTotalPrice() / 100.0);
-    }
     protected BasketItem(Parcel in) {
         item = in.readParcelable(Item.class.getClassLoader());
         count = in.readInt();
@@ -41,6 +34,14 @@ public class BasketItem implements Parcelable {
     public BasketItem(Item item, int count) {
         this.item = item;
         this.count = count;
+    }
+
+    public int getTotalPrice() {
+        return item.getPrice() * count;
+    }
+
+    public String getTotalPriceFormatted() {
+        return Tools.formatPrice(getTotalPrice() / 100.0);
     }
 
     @Override

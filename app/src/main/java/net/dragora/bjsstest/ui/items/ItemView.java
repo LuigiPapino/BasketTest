@@ -60,7 +60,6 @@ public class ItemView extends RelativeLayout {
         new AlertDialog.Builder(getContext(), R.style.MyDialog)
                 .setView(view)
                 .setPositiveButton(R.string.add, (dialog, which) -> {
-
                     OnItemAddedCallback callback = (OnItemAddedCallback) getContext();
                     callback.onItemAdded(item, view.getCount());
                 })

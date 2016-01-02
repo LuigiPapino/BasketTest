@@ -12,7 +12,6 @@ import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 
 import net.dragora.bjsstest.MyApplication;
 import net.dragora.bjsstest.R;
-import net.dragora.bjsstest.data.Basket;
 import net.dragora.bjsstest.data.BasketStore;
 import net.dragora.bjsstest.data.Item;
 import net.dragora.bjsstest.data.ItemsStore;
@@ -80,9 +79,7 @@ public class ItemsActivity extends AppCompatActivity implements ItemView.OnItemA
 
     @Override
     public void onItemAdded(Item item, int count) {
-        Basket basket = basketStore.getBasket();
-        basket.addItem(item, count);
-        basketStore.save();
+        basketStore.add(item, count);
         Snackbar.make(recyclerView, getString(R.string.item_added, count, item.getName()), Snackbar.LENGTH_SHORT).show();
     }
 

@@ -84,6 +84,12 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
+    androidTestCompile('com.squareup.retrofit:retrofit-mock:1.9.0') {
+        exclude group: 'com.google.code.gson', module: 'gson'
+    }
+    androidTestCompile('com.squareup.assertj:assertj-android:1.0.0') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
 
 

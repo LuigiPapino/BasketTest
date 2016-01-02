@@ -6,12 +6,10 @@ import android.text.TextUtils;
 
 import net.dragora.bjsstest.commons.Tools;
 
-import java.text.DecimalFormat;
-
 /**
  * Created by nietzsche on 26/12/15.
  *
- * Represent and item from the shop, with id, price, name and unit of mesure
+ * Represent and item from the shop, with id, price, name and unit of measure
  */
 public class Item implements Parcelable {
 
@@ -76,18 +74,18 @@ public class Item implements Parcelable {
         return name;
     }
 
-    public String getNameWithUnit() {
-        if (!TextUtils.isEmpty(unit))
-            return String.format("%s (%s)", name, unit);
-        else
-            return name;
-    }
-
     public void setName(String name) {
         if (name == null)
             this.name = "";
         else
             this.name = name;
+    }
+
+    public String getNameWithUnit() {
+        if (!TextUtils.isEmpty(unit))
+            return String.format("%s (%s)", name, unit);
+        else
+            return name;
     }
 
     @Override

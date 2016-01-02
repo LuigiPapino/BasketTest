@@ -60,17 +60,11 @@ public class Basket implements Parcelable {
     public void addItem(@Nullable Item item, int count) {
         if (item == null || count <= 0)
             return;
-
-
-
-
         Stream.of(items)
                 .filter(value -> value.getItem().getId() == item.getId())
                 .findFirst()
                 .orElseGet(() -> createAndAddBasketItem(item))
                 .addCount(count);
-
-
     }
 
     public ArrayList<BasketItem> getItems() {
@@ -90,7 +84,6 @@ public class Basket implements Parcelable {
     }
 
     public int getTotal() {
-
         return Stream.of(items)
                 .map(BasketItem::getTotalPrice)
                 .reduce(0, (x, y) -> x + y);

@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
 
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 
@@ -41,39 +40,29 @@ public class BasketActivity extends AppCompatActivity implements BasketItemView.
     FloatingActionButton fab;
     @ViewById
     UltimateRecyclerView recyclerView;
+
     @Inject
     BasketStore basketStore;
-
 
     @Bean
     BasketItemsRecyclerAdapter itemsAdapter;
 
     @Pref
     MainPrefs_ mainPrefs;
+
     ItemTouchHelper.Callback swipeDismissCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-
             return false;
         }
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             final int index = viewHolder.getAdapterPosition();
-            final BasketItem basketItem = basketStore.getBasket().removeItem(index);
-            basketStore.save();
-            itemsAdapter.setItems(basketStore.getBasket().getItems());
+            final BasketItem basketItem = basketStore.removeItem(index);
             Snackbar.make(recyclerView, getString(R.string.basket_item_deleted, basketItem.getItem().getName()), Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            basketStore.getBasket().getItems().add(index, basketItem);
-                            basketStore.save();
-                            itemsAdapter.setItems(basketStore.getBasket().getItems());
-                        }
-                    })
+                    .setAction(R.string.undo, v -> basketStore.add(index, basketItem))
                     .show();
-
         }
     };
     private ItemTouchHelper itemTouchHelper;
@@ -95,7 +84,13 @@ public class BasketActivity extends AppCompatActivity implements BasketItemView.
     @Override
     protected void onResume() {
         super.onResume();
-        itemsAdapter.setItems(basketStore.getBasket().getItems());
+        itemsAdapter.setBasketObservable(basketStore.getObservable());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        itemsAdapter.setBasketObservable(null);
     }
 
     @OptionsItem(R.id.action_checkout)
@@ -113,24 +108,17 @@ public class BasketActivity extends AppCompatActivity implements BasketItemView.
 
     @Override
     public void onItemEdited(BasketItem basketItem) {
-        basketStore.save();
-        itemsAdapter.setItems(basketStore.getBasket().getItems());
+        basketStore.saveAndNotify();
 
     }
 
     @Override
     public void onItemDeleted(BasketItem basketItem) {
         final int index = basketStore.getBasket().getItems().indexOf(basketItem);
-        basketStore.getBasket().getItems().remove(basketItem);
-        basketStore.save();
-        itemsAdapter.setItems(basketStore.getBasket().getItems());
+        basketStore.remove(basketItem);
 
         Snackbar.make(recyclerView, getString(R.string.basket_item_deleted, basketItem.getItem().getName()), Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, v -> {
-                    basketStore.getBasket().getItems().add(index, basketItem);
-                    basketStore.save();
-                    itemsAdapter.setItems(basketStore.getBasket().getItems());
-                })
+                .setAction(R.string.undo, v -> basketStore.add(index, basketItem))
                 .show();
     }
 }

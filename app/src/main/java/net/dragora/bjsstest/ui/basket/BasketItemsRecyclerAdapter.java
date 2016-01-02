@@ -1,19 +1,21 @@
 package net.dragora.bjsstest.ui.basket;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import net.dragora.bjsstest.commons.UltimateRecyclerViewAdapterBase;
 import net.dragora.bjsstest.commons.ViewWrapper;
+import net.dragora.bjsstest.data.Basket;
 import net.dragora.bjsstest.data.BasketItem;
-import net.dragora.bjsstest.data.Item;
-import net.dragora.bjsstest.ui.items.ItemView;
-import net.dragora.bjsstest.ui.items.ItemView_;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 import java.util.List;
+
+import rx.Observable;
+import rx.Subscription;
 
 /**
  * Created by nietzsche on 27/12/15.
@@ -24,20 +26,26 @@ public class BasketItemsRecyclerAdapter extends UltimateRecyclerViewAdapterBase<
 
     @RootContext
     Context context;
+    private Subscription subscription;
 
-
-    public void setItems(List<BasketItem> items) {
+    private void setItems(List<BasketItem> items) {
         this.items = items;
         notifyDataSetChanged();
+    }
+
+    public void setBasketObservable(@Nullable Observable<Basket> observable) {
+        if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();
+        if (observable != null)
+            subscription = observable.subscribe(basket -> setItems(basket.getItems()));
     }
 
     @Override
     public void onBindViewHolder(ViewWrapper<BasketItemView> holder, int position) {
         BasketItemView view = holder.getView();
-        BasketItem item                = items.get(position);
+        BasketItem item = items.get(position);
         view.bind(item);
     }
-
 
 
     @Override

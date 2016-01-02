@@ -1,5 +1,7 @@
 package net.dragora.bjsstest.data;
 
+import android.support.annotation.Nullable;
+
 import com.annimon.stream.Stream;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,7 +22,9 @@ public class CurrenciesList {
 
     private JsonObject jsonObject;
 
-    public CurrenciesList(JsonObject jsonObject) {
+    public CurrenciesList(@Nullable JsonObject jsonObject) {
+        if (jsonObject == null)
+            return;
         this.jsonObject = jsonObject;
         Set<Map.Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
         currenciesList = new ArrayList<>(entrySet.size());
@@ -43,5 +47,9 @@ public class CurrenciesList {
                 .map(Map.Entry::getKey)
                 .findFirst()
                 .orElseGet(() -> "");
+    }
+
+    public boolean isEmpty() {
+        return currenciesList == null || currenciesList.size() == 0;
     }
 }
