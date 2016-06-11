@@ -17,8 +17,9 @@ public class MockCurrencyLayerAPIService implements CurrencyLayerAPIService {
 
     public static void mock(NetworkApi networkApi, @Nullable ExchangesList jsonObject) {
 
-        // Setup MockRestAdapter without delays or posible errors
-        MockRestAdapter mockRestAdapter = MockRestAdapter.from(networkApi.restAdapterCurrencyLayer);
+        NetworkApiImpl networkApiImpl = (NetworkApiImpl) networkApi;
+        // Setup MockRestAdapter without delays or possible errors
+        MockRestAdapter mockRestAdapter = MockRestAdapter.from(networkApiImpl.restAdapterCurrencyLayer);
         mockRestAdapter.setDelay(0);
         mockRestAdapter.setErrorPercentage(0);
         mockRestAdapter.setVariancePercentage(0);
@@ -29,7 +30,7 @@ public class MockCurrencyLayerAPIService implements CurrencyLayerAPIService {
         mockService.exchangesList = jsonObject;
 
         // Replace the service instance with the mocked one
-        networkApi.currencyLayerAPIService = mockRestAdapter.create(CurrencyLayerAPIService.class, mockService);
+        networkApiImpl.currencyLayerAPIService = mockRestAdapter.create(CurrencyLayerAPIService.class, mockService);
     }
 
 

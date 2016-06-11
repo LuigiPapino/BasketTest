@@ -1,6 +1,7 @@
 package net.dragora.bjsstest.injection;
 
 import net.dragora.bjsstest.network.NetworkApi;
+import net.dragora.bjsstest.network.NetworkApiImpl;
 
 import javax.inject.Singleton;
 
@@ -16,7 +17,7 @@ public final class NetworkModule {
     @Provides
     @Singleton
     public NetworkApi provideNetworkApi() {
-        return new NetworkApi();
+        return new NetworkApiImpl();
     }
 
 }

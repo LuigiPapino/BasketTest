@@ -25,7 +25,7 @@ public class ItemsStoreFromRes implements ItemsStore {
         int[] prices = context.getResources().getIntArray(R.array.items_price);
 
         if (names.length != prices.length || names.length != units.length ||  names.length == 0)
-            throw new IllegalArgumentException("Items array lenght for names, prices or units not equal or zero");
+            throw new IllegalArgumentException("Items array length for names, prices or units not equal or zero");
 
         for (int i = 0; i < prices.length; i++) {
             Item item = new Item(i, prices[i], names[i], units[i]);

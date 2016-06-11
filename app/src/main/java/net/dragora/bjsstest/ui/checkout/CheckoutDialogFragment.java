@@ -26,13 +26,13 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.internal.util.SubscriptionList;
 
 
@@ -123,7 +123,8 @@ public class CheckoutDialogFragment extends DialogFragment {
         statusLabel.setText(R.string.updating_currency);
 
         subscriptionList.add(
-                networkApi.jsonRatesAPI.getCurrencies()
+                networkApi.getCurrencies()
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(json -> {
                                     currenciesList = new CurrenciesList(json);
                                     if (currenciesList.isEmpty())
@@ -136,7 +137,8 @@ public class CheckoutDialogFragment extends DialogFragment {
                         )
         );
         subscriptionList.add(
-                networkApi.currencyLayerAPIService.getExchangesList()
+                networkApi.getExchangesList()
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(value -> {
                                     if (value != null) {
                                         exchangesList = value;
@@ -154,13 +156,12 @@ public class CheckoutDialogFragment extends DialogFragment {
         if (networkInfo == null || !networkInfo.isAvailable()) {
             statusLabel.setText(R.string.no_connection);
             progressBar.setVisibility(View.GONE);
-            changeCurrency.setVisibility(View.INVISIBLE);
+            changeCurrency.setAlpha(0);
             return false;
         }
         return true;
     }
 
-    @UiThread
     @android.support.annotation.UiThread
     protected void setNetworkError(Throwable throwable) {
         if (throwable != null)
@@ -175,7 +176,6 @@ public class CheckoutDialogFragment extends DialogFragment {
         statusLabel.setText(R.string.network_error_exchanges);
     }
 
-    @UiThread
     @android.support.annotation.UiThread
     protected void exchangesUpdated() {
         changeCurrency.animate().alpha(1).start();

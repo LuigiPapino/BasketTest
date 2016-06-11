@@ -17,8 +17,9 @@ public class MockJsonRatesAPIService implements JsonRatesAPIService {
 
     public static void mock(NetworkApi networkApi, @Nullable JsonObject jsonObject) {
 
-        // Setup MockRestAdapter without delays or posible errors
-        MockRestAdapter mockRestAdapter = MockRestAdapter.from(networkApi.restAdapterJsonRates);
+        NetworkApiImpl networkApiImpl = (NetworkApiImpl) networkApi;
+        // Setup MockRestAdapter without delays or possible errors
+        MockRestAdapter mockRestAdapter = MockRestAdapter.from(networkApiImpl.restAdapterJsonRates);
         mockRestAdapter.setDelay(0);
         mockRestAdapter.setErrorPercentage(0);
         mockRestAdapter.setVariancePercentage(0);
@@ -29,7 +30,7 @@ public class MockJsonRatesAPIService implements JsonRatesAPIService {
         mockService.jsonObject = jsonObject;
 
         // Replace the service instance with the mocked one
-        networkApi.jsonRatesAPI = mockRestAdapter.create(JsonRatesAPIService.class, mockService);
+        networkApiImpl.jsonRatesAPI = mockRestAdapter.create(JsonRatesAPIService.class, mockService);
     }
 
 
